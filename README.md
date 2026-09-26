@@ -16,7 +16,7 @@ Source data → Mapping & transformation → Data quality → Risk calculations 
 
 | Path | Contents |
 | --- | --- |
-| `docs/CCAR_POC_PRD.md` | Full PRD: concept, process, data model, mappings, calculations, scenarios, reporting, BRs, user stories, sprint plan, SQL, DQ and recon, controls, demo plan |
+| `docs/CCAR_POC_PRD.md` / `.docx` | Full PRD: concept, process, data model, mappings, calculations, scenarios, reporting, BRs, user stories, sprint plan, SQL, DQ and recon, controls, demo plan |
 | `data/landing/2026-06-30/` | Raw source files (LOANSYS, COLLSYS, GL control, code map), with **12 seeded data-quality defects** |
 | `data/fixes/2026-06-30/` | Corrected and supplementary records that resolve the defects (PRD §7.1) |
 | `data/expected/` | QA oracle: 120 loan × scenario results plus a portfolio and capital summary |
