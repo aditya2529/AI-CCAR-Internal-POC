@@ -45,10 +45,14 @@ psql -d stresslens -f sql/02_reference_data.sql
 
 Reconciliation: the raw balance file ($279.7M, 41 rows) bridges to the curated book ($286.6M, 40 loans), which bridges to the GL ($289.0M, with an explained $2.4M break for LN1041).
 
-## Team workflow
+## Team setup and workflow
 
-- `main` is protected. Work on a branch named `feature/US-xx-short-name` and open a pull request.
-- Every PR needs one reviewer and links to its Jira story (US-01 … US-16).
+About 40 people work in **5 squads of ~8** (squad lead, 3 developers, 2 data engineers, 2 QA). Each squad builds the full pipeline in parallel over 4 two-week sprints. **One BA** supports all squads (PRD §14.1).
+
+- Each squad works only in its own folder: `squads/squad-1/` … `squads/squad-5/`.
+- Name branches `squad-N/US-xx-short-name` (for example `squad-2/US-05-dq-rules`) and open a pull request into `main`.
+- `docs/`, `data/`, `sql/` and `scripts/` are shared and changed only by the BA.
+- Questions go through your squad lead to the BA's daily Q&A. Answers are posted once in the shared question log.
 - Keep this repo synthetic-data only. Never commit client or production data.
 
 ## Stack

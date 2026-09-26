@@ -21,7 +21,7 @@ Recommendation: build **Option A — a wholesale credit stress-loss pipeline wit
 - **Why:** Iris is about to enter CCAR delivery. Our BAs, developers, data engineers and QA have limited hands-on CCAR experience. A working POC closes that gap before client money is at stake.
 - **What it does:** ingests loan, customer, collateral and status data; catches seeded data-quality defects; maps source codes to reporting codes; calculates PD, LGD, EAD, stress loss, RWA, PPNR and CET1 impact; reconciles source to target; produces a Y-14Q-style loan extract and a Y-14A-style capital summary; routes them through maker-checker approval with a full audit trail.
 - **What it is not:** it is not a regulatory submission, not a validated model, and not built to Federal Reserve specifications. All formulas and scenarios are POC simplifications, labelled as such throughout.
-- **Team and time:** one Scrum team (PO, BA, 2 developers, data engineer, QA, Scrum Master), 4 two-week sprints, open-source stack (PostgreSQL, Python, Streamlit).
+- **Team and time:** about 40 people in 5 parallel squads of \~8 (developers, data engineers, QA, squad lead), one shared BA, 6 hours a day, 4 two-week sprints, open-source stack (PostgreSQL, Python, Streamlit).
 - **Outcome for management:** a 20-minute live demo, a reusable CCAR starter kit (data model, DQ rule library, SQL pack, requirements and test templates), and a gap list for real client work.
 
 **How to read this PRD**
@@ -70,7 +70,7 @@ Recommendation: build **Option A — a wholesale credit stress-loss pipeline wit
 | 4 | Calculation accuracy | Pipeline matches the QA spreadsheet within $1 per loan |
 | 5 | Scenarios | 3 scenarios run and compared side by side |
 | 6 | Approval and audit | Maker-checker enforced; every run, override and approval logged |
-| 7 | Team learning | Every team member presents one part of the demo |
+| 7 | Team learning | All 5 squads pass the 4 sprint gates and match the expected results; every squad demos internally |
 | 8 | Delivery | Demo delivered at end of Sprint 4 |
 
 ## 3. Scope / Out of Scope
@@ -1233,7 +1233,34 @@ Dependencies: US-01 to US-10. Priority: Should.
 
 ## 14. Scrum Team Responsibilities
 
-Seven people (PO, BA, 2 developers, data engineer, QA, Scrum Master); every role also has a CCAR learning goal, because learning is the point of the POC.
+About 40 people in 5 squads of \~8, plus one BA and one Product Owner shared across all squads. Every role has a CCAR learning goal, because learning is the point of the POC.
+
+### 14.1 Programme structure: 5 squads, one BA
+
+Every squad builds the full StressLens pipeline from the same PRD and data, in parallel. The BA is not inside any squad; the requirements are already written, so the BA answers questions and accepts work for all five.
+
+| Role | Per squad | Across 5 squads | Notes |
+| --- | --- | --- | --- |
+| Squad lead (also acts as Scrum Master) | 1 | 5 | A developer or QA; collects the squad's questions and brings them to the BA |
+| Developers | 3 | 15 | Calculation engine, UI, workflow |
+| Data engineers | 2 | 10 | Database, ingestion, DQ runner, reconciliation |
+| QA engineers | 2 | 10 | Test cases, calculation checks, regression |
+| **Squad total** | **8** | **40** |  |
+| Business Analyst | — | 1 (shared) | Owns the PRD, answers all questions, accepts stories |
+| Product Owner | — | 1 (shared) | \[ASSUMPTION\] Delivery lead or sponsor; sets priorities and runs the final demo |
+
+**How one BA supports 40 people**
+
+- **Write once, share with all.** The PRD, mapping spec, DQ rule catalogue, sample data and expected results are prepared once by the BA. Sprint tasks in Section 15 marked “BA” are done once for all squads, not five times.
+- **One daily Q&A slot (30 min)** with the 5 squad leads only. Team members route questions through their lead.
+- **One shared question log** (Jira, Confluence or GitHub Discussions). Every answer is written once and visible to all squads, so the same question is never answered twice.
+- **Acceptance by expected results.** A story is accepted when the squad's output matches the files in `data/expected/`. The BA reviews exceptions, not every line.
+- **One combined sprint review per sprint** (90 min): each squad gets 15 minutes against the same gate checklist.
+- **One weekly CCAR Hour** for all 40 people.
+
+Estimated BA load: about 10–12 hours a week on squad support, leaving the rest for refinement and preparing the next sprint.
+
+**GitHub:** one shared repository. Each squad works in its own folder (`squads/squad-1/` … `squads/squad-5/`) on branches named `squad-N/US-xx-short-name`; the PRD, data and SQL in the root are shared and changed only by the BA.
 
 | Role | POC responsibilities | Key artefacts owned | CCAR learning goal | Time on POC \[ASSUMPTION\] |
 | --- | --- | --- | --- | --- |
@@ -1263,7 +1290,7 @@ Seven people (PO, BA, 2 developers, data engineer, QA, Scrum Master); every role
 
 ## 15. Sprint Plan
 
-Four 2-week sprints (8 weeks, \~20 points each). Each sprint ends with a gate the PO checks before the next sprint starts.
+All 5 squads run the same four 2-week sprints in parallel (8 weeks, 6 hours a day, \~20 points per squad per sprint). Each sprint ends with a gate the PO checks before the next sprint starts.
 
 | Sprint | Weeks | Focus | Exit gate |
 | --- | --- | --- | --- |
@@ -1718,7 +1745,7 @@ Twelve key controls cover the lifecycle end to end; each leaves evidence in a ta
 
 ## 19. Demo Plan
 
-A 20-minute live demo that tells one story: bad data arrives, the controls catch it, the team fixes it under control, and a Severe recession takes IDB's CET1 ratio from 11.99% to 8.53% in an approved, traceable report. Every team member presents one segment.
+A 20-minute live demo that tells one story: bad data arrives, the controls catch it, the team fixes it under control, and a Severe recession takes IDB's CET1 ratio from 11.99% to 8.53% in an approved, traceable report. Each squad runs this demo internally in Week 8; the squad with the cleanest results presents it live to management, with presenters drawn from all 5 squads, and a closing slide compares every squad's results against the expected figures.
 
 | Time | Segment | Presenter | What to show on screen | Key message |
 | --- | --- | --- | --- | --- |
@@ -1760,12 +1787,14 @@ The biggest risk is not technical: it is the team (or management) mistaking a tr
 | R6 | Environment issues (Docker, admin rights, database access) | Medium | Medium | Sprint 1 day 1 set-up spike; free cloud Postgres as fallback | Data Engineer |
 | R7 | Demo failure in front of management | Low | High | Reset script, two dry runs, backup recording | Scrum Master |
 | R8 | Synthetic data mistaken for, or later mixed with, client data | Low | High | Synthetic-only rule; no client data on POC environment ever | Scrum Master |
+| R9 | One BA becomes a bottleneck for 5 squads | High | High | Questions only via squad leads; daily 30-min Q\&A; shared question log; acceptance against expected-results files | BA, squad leads |
+| R10 | Squads interpret requirements differently and results diverge | Medium | Medium | Same PRD, data and expected results for all; answers published once to all squads; common gate checklist | BA |
 
 ### 20.2 Assumptions
 
 | # | Assumption |
 | --- | --- |
-| A1 | Seven team members are available for 8 weeks at the allocations in Section 14 |
+| A1 | About 40 team members are available 6 hours a day for 8 weeks, in 5 squads; one BA supports all squads |
 | A2 | Open-source stack (PostgreSQL, Python, Streamlit) is acceptable; no licence purchase needed |
 | A3 | Iris Demo Bancorp and all data are fictional; starting CET1 $60.4M, other RWA $180M, PPNR inputs, dividends and tax rate are illustrative |
 | A4 | One as-of date (2026-06-30) and one cumulative 9-quarter horizon are enough to teach the concepts |
@@ -1798,7 +1827,7 @@ The biggest risk is not technical: it is the team (or management) mistaking a tr
 | Data engineering | Layered pipeline, source-to-target mapping, field-level lineage, reconciliation bridge |
 | Development | Rule-based risk engine, capital projection, approval workflow, UI |
 | QA | Independent calculation oracle, 12 seeded defects all caught, regression pack |
-| Delivery | 4 Scrum sprints with gates, on time |
+| Delivery | 5 parallel squads (\~40 people), 4 sprints with gates, on time |
 
 **What was automated.** File loading and control totals; code mapping; 15 DQ checks; latest-status selection; 120 loan-level stress calculations; capital projection; 8 reconciliations; 11 report edit checks; report generation and export; audit logging.
 
@@ -1823,7 +1852,7 @@ The biggest risk is not technical: it is the team (or management) mistaking a tr
 
 ## 22. Final Recommendation
 
-**Approve StressLens as scoped: one Scrum team, 8 weeks, open-source stack, wholesale credit only, three hypothetical scenarios.**
+**Approve StressLens as scoped: 5 parallel squads (\~40 people), one shared BA, 8 weeks, open-source stack, wholesale credit only, three hypothetical scenarios.**
 
 - It is the smallest scope that touches every step of the CCAR lifecycle and gives every role real hands-on practice.
 - It produces reusable assets (data model, DQ rule library, SQL pack, requirement and test templates) that shorten ramp-up on a real engagement.
