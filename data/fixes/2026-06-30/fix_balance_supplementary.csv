@@ -1,0 +1,3 @@
+loan_id,as_of_date,outstanding_bal,days_past_due,gl_account,reason
+LN1033,2026-06-30,8700000,0,142000,Missing from extract
+LN1021,2026-06-30,2250000,0,141000,Sign error corrected

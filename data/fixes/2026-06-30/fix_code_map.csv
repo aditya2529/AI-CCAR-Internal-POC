@@ -1,0 +1,2 @@
+code_type,source_code,target_code,reason
+PRODUCT,CRM,CRE_MULTIFAMILY,Was mapped to CI_TERM in error
