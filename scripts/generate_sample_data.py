@@ -242,6 +242,20 @@ stat={lid:code_map[("STATUS",status_fix.get(lid,v[1]))] for lid,v in latest.item
 cl={}
 for c in coll: cl.setdefault(c[1],[]).append((code_map[("COLLATERAL",c[2])],c[3]))
 
+# ---------------- curated (clean) layer: the answer key for the data squad, and the ----------------
+# ---------------- ready-made input for the quality, calculation and reporting squads ----------------
+CUR = os.path.join(ROOT, "data", "curated", ASOF)
+os.makedirs(CUR, exist_ok=True)
+w("cur_customer.csv",["customer_id","customer_name","naics_code","state_code","obligor_rating","customer_since"],
+  [(c[0],c[1],c[2] or "",c[3],c[4],c[5]) for c in cust.values() if c[0] in {l[1] for l in L.values()}],CUR)
+w("cur_loan_master.csv",["loan_id","customer_id","src_product_code","product_code","portfolio","origination_date","maturity_date","commitment_amt","interest_rate","rate_type","hvcre_flag"],
+  [(r[0],r[1],r[2],code_map[("PRODUCT",r[2])],"CRE" if code_map[("PRODUCT",r[2])].startswith("CRE") else "CI",r[3],r[4],r[5],r[6],r[7],r[8]) for r in L.values()],CUR)
+w("cur_loan_balance.csv",["loan_id","as_of_date","outstanding_bal","undrawn_amt","days_past_due","gl_account"],
+  [(lid,ASOF,true_bal[lid],max(0,r[5]-true_bal[lid]),dpd.get(lid,0),"141000" if r[2].startswith("CI") else "142000") for lid,r in L.items()],CUR)
+w("cur_loan_current_status.csv",["loan_id","current_status"],[(lid,stat[lid]) for lid in L],CUR)
+w("cur_collateral.csv",["collateral_id","loan_id","collateral_type","collateral_value","valuation_date"],
+  [(c[0],c[1],code_map[("COLLATERAL",c[2])],c[3],c[4]) for c in coll],CUR)
+
 rows=[]
 for lid,r in L.items():
     prod=code_map[("PRODUCT",r[2])]; port="CRE" if prod.startswith("CRE") else "CI"
