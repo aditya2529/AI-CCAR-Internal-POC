@@ -33,14 +33,14 @@ Load data → Map & clean → Data quality → Calculate losses (3 scenarios) �
 
 ## Team setup
 
-About 40 people in **4 squads of ~10**, each owning one layer, plus one shared BA:
+About 40 people in **4 squads of ~10**, each owning one layer, plus one shared BA. Plan: about 4 weeks, 2 sprints (a draft, to be adjusted with feedback):
 
 | Squad | Owns |
 | --- | --- |
 | A. Data Foundation | Load, map, transform, one-command run |
 | B. Quality & Reconciliation | Quality rules, override workflow, reconciliation, audit log |
-| C. Risk & Capital | Scenarios, loss calculations, capital, dashboard |
-| D. Reporting & Governance | Reports, approval workflow, lineage |
+| C. Risk & Capital | Scenarios, loss calculations, capital (stretch: dashboard) |
+| D. Reporting & Governance | Reports, approval workflow (stretch: lineage) |
 
 - Questions go through your squad lead to the BA's daily Q&A. Answers are posted once in the shared question log.
 - Work on a branch named `squad-X/US-xx-short-name` (for example `squad-C/US-08-loss-calc`) and open a pull request into `main`.

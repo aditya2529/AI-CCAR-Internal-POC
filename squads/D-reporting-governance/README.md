@@ -1,7 +1,7 @@
 # Squad D: Reporting & Governance
 
-**Owns:** Loan report, capital summary, approval workflow, lineage
-**Stories:** US-11, US-12, US-14
+**Owns:** Loan report, capital summary, approval workflow (stretch: lineage)
+**Stories:** US-11, US-12 (stretch: US-14)
 **Starts from:** data/curated/ and data/expected/ (results are provided until squad C delivers)
 **Hands over:** Approved reports
 
